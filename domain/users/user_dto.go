@@ -16,6 +16,8 @@ type User struct {
 	Password		string	`json:"-"`
 }
 
+type Users []User
+
 const (
 	StatusActive = "active"
 )
