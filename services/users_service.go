@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/kousukef/bookstore_users-api/domain/users"
+	"github.com/kousukef/bookstore_users-api/utils/date_utils"
 	"github.com/kousukef/bookstore_users-api/utils/errors"
 )
 
@@ -17,6 +18,9 @@ func CreateUser(user users.User) (*users.User, *errors.RestErr) {
 	if err := user.Validate(); err != nil {
 		return nil, errors.NewBadRequestError("invalid email adress")
 	}
+
+	user.DateCreated = date_utils.GetNowDbFormat()
+	user.Status = users.StatusActive
 
 	if err := user.Save(); err !=  nil {
 		return nil, err
@@ -62,4 +66,9 @@ func DeleteUser(userId int64) *errors.RestErr {
 	}
 
 	return nil
+}
+
+func Search(status string) ([]users.User, *errors.RestErr) {
+	dao := users.User{}
+	return dao.FindByStatus(status)
 }
